@@ -7,24 +7,24 @@
         mc:Ignorable="d"
         Title="GamePlay" 
         Height="500"
-        Width="320"
+        Width="640"
         KeyUp="Window_KeyUp"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        BorderThickness="0"
-        BorderBrush="Chocolate">
-    <Grid>
+        BorderThickness="0">
+    <Grid Background="Transparent">
         <Grid Name="GameScreen" Visibility="Hidden">
-            <Grid.Background>
-                <ImageBrush ImageSource="Image/bg.png" Stretch="UniformToFill"/>
-            </Grid.Background>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <!--LEFT-->
             <GroupBox BorderThickness="0">
                 <Grid Grid.Column="0">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="Image/bg.png" Stretch="UniformToFill"/>
+                    </Grid.Background>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0.5*"></RowDefinition>
                         <RowDefinition Height="4*"></RowDefinition>
@@ -92,7 +92,7 @@
                                     Foreground="White"
                                     Name="txtAwsA"
                                     TextWrapping="Wrap"
-                                    Text="as dasd asddas daas  312 312 312 312312 312dasd asdas. " 
+                                    Text="as dasd asddas daas  312 312 312 312312 312dasd asdas. v312v312v31231" 
                                     FontWeight="Light"
                                     FontSize="13">
                                     <TextBox.Background>
@@ -163,6 +163,61 @@
                 </Grid>
             </GroupBox>
             <!--RIGHT-->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"></RowDefinition>
+                    <RowDefinition Height="8*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.Background>
+                    <ImageBrush ImageSource="Image/bg_start.png" Stretch="UniformToFill"/>
+                </Grid.Background>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Image Name="helperA" HorizontalAlignment="Right" MouseLeftButtonDown="helperA_MouseLeftButtonDown" Grid.Column="0" Tag="0" Source="Image/change.png" Width="40" Height="40"></Image>
+                    <Image Name="helperB" HorizontalAlignment="Center" MouseLeftButtonDown="helperA_MouseLeftButtonDown" Grid.Column="1" Tag="0" Source="Image/fiftyfifty.png" Width="40" Height="40"></Image>
+                    <Image Name="helperC" HorizontalAlignment="Left" Grid.Column="2" MouseLeftButtonDown="helperA_MouseLeftButtonDown" Tag="0" Source="Image/audience.png" Width="40" Height="40"></Image>
+                </Grid>
+                <ListView
+                    Background="{Binding}"
+                    Grid.Row="1"
+                    BorderThickness="0"
+                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                    ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                    Name="dataContext">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid
+                                Width="320" 
+                                Height="22" >
+                                <Grid.Background>
+                                    <ImageBrush ImageSource="{Binding Background}" Stretch="UniformToFill"/>
+                                </Grid.Background>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                    <ColumnDefinition Width="9*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Foreground="White"
+                                    HorizontalAlignment="Center"
+                                    FontSize="14"
+                                    FontWeight="{Binding Foreground}"
+                                    Text="{Binding STT}"></TextBlock>
+                                <TextBlock
+                                    Foreground="White"
+                                    HorizontalAlignment="Center"
+                                    Grid.Column="1"
+                                    FontSize="14"
+                                    Text="{Binding Score}"
+                                    FontWeight="{Binding Foreground}"></TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
         </Grid>
         <Grid Name="WelComScreen" Visibility="Visible">
             <MediaElement Stretch="Fill" Name="media" Source="Music/intro.wmv"></MediaElement>

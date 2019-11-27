@@ -26,10 +26,11 @@ namespace AiLaTrieuPhu
         public SolidColorBrush DEFAULT = Brushes.White;
         public SolidColorBrush CHOOSE = Brushes.Orange;
         public SolidColorBrush AWSER = Brushes.Aquamarine;
-
+        List<string> dsDapAn = new List<string> { "A", "B", "C", "D" };
         public int CurrentIndex = 0;
         public string isChoose = "";
         public string awsTrue = "";
+        public int awsTrueint = 0;
         public List<CauHoi> CauHois = null;
         NotifiableCollection<Level> Levels = new NotifiableCollection<Level>() {
             new Level() { Score = "150.000.000", Background = "White", STT = 15, Foreground = "ExtraBold"},
@@ -83,7 +84,7 @@ namespace AiLaTrieuPhu
         {
             // lấy random 15 câu từ kho
             CauHois = DataProvider.DataProvider.getInstance.DanhSachCauHoi.OrderBy(x => Guid.NewGuid()).Take(15).ToList();
-            // dataContext.ItemsSource = Levels;
+            dataContext.ItemsSource = Levels;
             foreach (var item in CauHois) {
                 // xáo trộn đáp án
                 item.DanhSachDapAn = item.DanhSachDapAn.OrderBy(x => Guid.NewGuid()).ToList();
@@ -107,6 +108,10 @@ namespace AiLaTrieuPhu
 
         public void NapCauHoi(List<CauHoi> dsCauHoi, int index)
         {
+            txtAwsA.Visibility = Visibility.Visible;
+            txtAwsB.Visibility = Visibility.Visible;
+            txtAwsC.Visibility = Visibility.Visible;
+            txtAwsD.Visibility = Visibility.Visible;
             if (dsCauHoi.Count > index)
             {
                 ClearDapAn();
@@ -119,21 +124,24 @@ namespace AiLaTrieuPhu
                 grQuest.Header = "Câu số " + (index + 1);
                 isChoose = "";
                 awsTrue = cauHoi.DanhSachDapAn[0].IsTrue ? "A" : cauHoi.DanhSachDapAn[1].IsTrue ? "B" : cauHoi.DanhSachDapAn[2].IsTrue ? "C" : "D";
-            }
-            //foreach (var item in Levels) {
-            //    item.Background = "White";
-            //}
-            //if (index > 0)
-            //{
-            //    Levels[Levels.Count - index - 1 ].Background = "Orange";
-            //}
-            //else
-            //{
-            //    Levels[Levels.Count - 1 ].Background = "Orange";
+                awsTrueint = cauHoi.DanhSachDapAn[0].IsTrue ? 1 : cauHoi.DanhSachDapAn[1].IsTrue ? 2 : cauHoi.DanhSachDapAn[2].IsTrue ? 3 : 4;
 
-            //}
-            //dataContext.ItemsSource = null;
-            //dataContext.ItemsSource = Levels;
+            }
+            foreach (var item in Levels)
+            {
+                item.Background = "";
+            }
+            if (index > 0)
+            {
+                Levels[Levels.Count - index - 1].Background = "Image/bg_btn_red.png";
+            }
+            else
+            {
+                Levels[Levels.Count - 1].Background = "Image/bg_btn_red.png";
+
+            }
+            dataContext.ItemsSource = null;
+            dataContext.ItemsSource = Levels;
         }
 
         public bool SetDapAnDung(Control children)
@@ -344,6 +352,140 @@ namespace AiLaTrieuPhu
             if (e.Key == Key.Escape)
             {
                 Close();
+            }
+        }
+
+        public List<int> RanDom(int des) {
+            List<int> res = new List<int>();
+            while (res.Count !=2) {
+                Random rnd = new Random();
+                int fl = rnd.Next(1, 4);
+                if (fl != des && !res.Contains(fl)) {
+                    res.Add(fl);
+                }
+            }
+            return res;
+        }
+        public List<int> DivideEvenly(int total)
+        {
+            List<int> ds = new List<int>();
+            while (total != 0 && ds.Count != 4) {
+                Random rnd = new Random();
+                int fl = rnd.Next(0, total);
+                ds.Add(fl);
+                total -= fl;
+            }
+            return ds;
+        }
+        private async void helperA_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var item = (sender as Image);
+            switch (item.Name) {
+                case "helperA": {
+                        //change
+                        if (item.Tag.ToString().Equals("0")) {
+                            item.Source = new BitmapImage(new Uri(@"/Image/change_used.png", UriKind.Relative));
+                            item.Tag = 1;
+                            item.IsEnabled = false;
+                            CurrentIndex++;
+                            MyMediaPlayer.getInstance.PlayMusic((CurrentIndex + 1).ToString());
+                            await Task.Run(() =>
+                            {
+                                Thread.Sleep(1100);
+                            });
+                            NapCauHoi(CauHois, CurrentIndex);
+                            if (CurrentIndex < 5)
+                            {
+                                MyMediaPlayer.getInstance.PlayMusic("MocMot");
+                            }
+                            else
+                            {
+                                MyMediaPlayer.getInstance.PlayMusic("MocHai");
+                            }
+                        }
+                        break;
+                }
+                case "helperB":
+                {
+                        //fiftyfifty
+                        if (item.Tag.ToString().Equals("0"))
+                        {
+                            item.Source = new BitmapImage(new Uri(@"/Image/fiftyfifty_used.png", UriKind.Relative));
+                            item.Tag = 1;
+                            item.IsEnabled = false;
+                            MyMediaPlayer.getInstance.PlayMusic("5050");
+                            await Task.Run(() =>
+                            {
+                                Thread.Sleep(2800);
+                            });
+                            var ranDom = RanDom(awsTrueint);
+                            foreach (var fl in ranDom) {
+                                switch (fl) {
+                                    case 1: {
+                                            txtAwsA.Visibility = Visibility.Hidden;
+                                            break;
+                                     }
+                                    case 2:
+                                        {
+                                            txtAwsB.Visibility = Visibility.Hidden;
+                                            break;
+                                        }
+                                    case 3:
+                                        {
+                                            txtAwsC.Visibility = Visibility.Hidden;
+                                            break;
+                                        }
+                                    case 4:
+                                        {
+                                            txtAwsD.Visibility = Visibility.Hidden;
+                                            break;
+                                        }
+                                }
+                            }
+                            await Task.Run(() =>
+                            {
+                                Thread.Sleep(1000);
+                            });
+                            if (CurrentIndex < 5)
+                            {
+                                MyMediaPlayer.getInstance.PlayMusic("MocMot");
+                            }
+                            else
+                            {
+                                MyMediaPlayer.getInstance.PlayMusic("MocHai");
+                            }
+                        }
+                        break;
+                }
+                case "helperC":
+                {
+                        //audience
+                        if (item.Tag.ToString().Equals("0"))
+                        {
+                            item.Source = new BitmapImage(new Uri(@"/Image/audience_used.png", UriKind.Relative));
+                            item.Tag = 1;
+                            List<int> ds = DivideEvenly(100);
+                            MyMediaPlayer.getInstance.PlayMusic("HoiKhanGia");
+                            await Task.Run(() =>
+                            {
+                                Thread.Sleep(6000);
+                            });
+                            string res = ds[0].ToString() + "% khán giả chọn A" + Environment.NewLine
+                                + ds[1].ToString() + "% khán giả chọn B" + Environment.NewLine
+                                + ds[2].ToString() + "% khán giả chọn C" + Environment.NewLine
+                                + ds[3].ToString() + "% khán giả chọn D" + Environment.NewLine;
+                            if (CurrentIndex < 5)
+                            {
+                                MyMediaPlayer.getInstance.PlayMusic("MocMot");
+                            }
+                            else
+                            {
+                                MyMediaPlayer.getInstance.PlayMusic("MocHai");
+                            }
+                            MessageBox.Show(res);
+                        }
+                        break;
+                }
             }
         }
     }

@@ -29,6 +29,7 @@ namespace AiLaTrieuPhu
             GamePlay gamePlay = new GamePlay();
             MyMediaPlayer.getInstance.StopMusic();
             //s MyMediaPlayer.getInstance.PlayMusic("StartGame");
+    
             gamePlay.Exit += (se, ar) => {
                  //Thoát game, quay lại màn hình welcome
                 (se as GamePlay).Close();
@@ -37,6 +38,7 @@ namespace AiLaTrieuPhu
             };
             Hide();
             gamePlay.Show();
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
